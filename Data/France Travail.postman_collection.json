@@ -1,0 +1,410 @@
+{
+	"info": {
+		"_postman_id": "d88da208-e831-434e-8367-ef47674809a8",
+		"name": "France Travail",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39228165"
+	},
+	"item": [
+		{
+			"name": "Authentification",
+			"item": [
+				{
+					"name": "Client Credentials Stats",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Set Token variable', function(){\r",
+									"    if (pm.response.code === 200){\r",
+									"        var data = JSON.parse(responseBody);\r",
+									"        pm.collectionVariables.set('access_token_stats', data.access_token);\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "{{id_client}}",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{id_secret}}",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "{{scope_stats\n}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://entreprise.francetravail.fr/connexion/oauth2/access_token?realm=%2Fpartenaire",
+							"protocol": "https",
+							"host": [
+								"entreprise",
+								"francetravail",
+								"fr"
+							],
+							"path": [
+								"connexion",
+								"oauth2",
+								"access_token"
+							],
+							"query": [
+								{
+									"key": "realm",
+									"value": "%2Fpartenaire"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Client Credentials Offres",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Set Token variable', function(){\r",
+									"    if (pm.response.code === 200){\r",
+									"        var data = JSON.parse(responseBody);\r",
+									"        pm.collectionVariables.set('access_token_offres', data.access_token);\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "{{id_client}}",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{id_secret}}",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "{{scope_offres}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://entreprise.francetravail.fr/connexion/oauth2/access_token?realm=/partenaire",
+							"protocol": "https",
+							"host": [
+								"entreprise",
+								"francetravail",
+								"fr"
+							],
+							"path": [
+								"connexion",
+								"oauth2",
+								"access_token"
+							],
+							"query": [
+								{
+									"key": "realm",
+									"value": "/partenaire"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Offres",
+			"item": [
+				{
+					"name": "New Request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token_offres}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{context}}/partenaire/offresdemploi/v2/metiers",
+							"host": [
+								"{{context}}"
+							],
+							"path": [
+								"partenaire",
+								"offresdemploi",
+								"v2",
+								"metiers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.francetravail.io/partenaire/offresdemploi/v2/offres/048KLTP",
+							"protocol": "https",
+							"host": [
+								"api",
+								"francetravail",
+								"io"
+							],
+							"path": [
+								"partenaire",
+								"offresdemploi",
+								"v2",
+								"offres",
+								"048KLTP"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Search Offers",
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://api.francetravail.io/partenaire/offresdemploi/v2/offres/search?grandDomaine=M18",
+					"protocol": "https",
+					"host": [
+						"api",
+						"francetravail",
+						"io"
+					],
+					"path": [
+						"partenaire",
+						"offresdemploi",
+						"v2",
+						"offres",
+						"search"
+					],
+					"query": [
+						{
+							"key": "grandDomaine",
+							"value": "M18"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search Activities",
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://api.francetravail.io/partenaire/offresdemploi/v2/referentiel/secteursActivites",
+					"protocol": "https",
+					"host": [
+						"api",
+						"francetravail",
+						"io"
+					],
+					"path": [
+						"partenaire",
+						"offresdemploi",
+						"v2",
+						"referentiel",
+						"secteursActivites"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search Romes",
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://api.francetravail.io/partenaire/offresdemploi/v2/referentiel/metiers",
+					"protocol": "https",
+					"host": [
+						"api",
+						"francetravail",
+						"io"
+					],
+					"path": [
+						"partenaire",
+						"offresdemploi",
+						"v2",
+						"referentiel",
+						"metiers"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "id_client",
+			"value": "PAR_jobmarket_fcf4059e334b017532ce1bef87274d6dd2bb3dfcafbe99b26dcaa55169381013",
+			"type": "string"
+		},
+		{
+			"key": "id_secret",
+			"value": "c900c94f3c89c12443384fada5387c05b9528805e0d0e5b0add348124e82550a",
+			"type": "string"
+		},
+		{
+			"key": "scope_stats\n",
+			"value": "api_stats-offres-demandes-emploiv1",
+			"type": "string"
+		},
+		{
+			"key": "scope_offres",
+			"value": "o2dsoffre",
+			"type": "string"
+		},
+		{
+			"key": "access_token_stats",
+			"value": ""
+		},
+		{
+			"key": "access_token_offres",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "context",
+			"value": "https://api.francetravail.io",
+			"type": "string"
+		}
+	]
+}
