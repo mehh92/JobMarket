@@ -119,8 +119,7 @@ class AdzunaJobScraper:
             Chemin du fichier sauvegardé
         """
         if filename is None:
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            filename = f"JobMarket/Adzuna API/data/jobs_{search_term}_{timestamp}.json"
+            filename = f"Adzuna API/data/jobs_{search_term}.json"
         
         # Créer le répertoire s'il n'existe pas
         os.makedirs(os.path.dirname(filename), exist_ok=True)
@@ -186,8 +185,8 @@ def main():
     
     # Paramètres de recherche
     search_term = "data"  # Terme de recherche
-    max_pages = 10  # None = toutes les pages, ou définir un nombre pour limiter
-    delay = 1.0  # Délai en secondes entre les requêtes
+    max_pages = 700  # None = toutes les pages, ou définir un nombre pour limiter
+    delay = 0.2  # Délai en secondes entre les requêtes
     
     # Créer le scraper
     scraper = AdzunaJobScraper(APP_ID, APP_KEY)

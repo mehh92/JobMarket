@@ -65,4 +65,28 @@ Dans le script `adzuna_scraper.py`, vous pouvez modifier :
   },
   "jobs": [...]
 }
-``` 
+```
+
+## 📊 Analyse des données
+
+### Analyse automatique avec Python
+```bash
+# Installer les dépendances d'analyse
+pip install pandas matplotlib seaborn plotly
+
+# Lancer l'analyse automatique
+python data_analysis.py
+```
+
+Le script `data_analysis.py` va :
+- ✅ Transformer le JSON en DataFrame pandas
+- ✅ Nettoyer et enrichir les données  
+- ✅ Créer des statistiques détaillées
+- ✅ Générer des visualisations
+- ✅ Exporter un CSV nettoyé
+
+### Fichiers d'analyse disponibles
+- `data_analysis.py` - Script d'analyse automatique
+- `requirements_analysis.txt` - Dépendances pour l'analyse
+- `data/jobs_cleaned_*.csv` - Données nettoyées exportées
+- `data/analyse_offres_emploi.png` - Graphiques générés 
