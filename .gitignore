@@ -5,6 +5,7 @@ config.json
 # Data files (generated locally)
 data/
 *.json
+*.csv
 !config.example.adzuna.json
 !**/config.example.adzuna.json
 !package.json
