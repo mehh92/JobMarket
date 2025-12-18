@@ -54,24 +54,26 @@ JobMarket/
 ├── README.md                       # Ce fichier
 ├── DECISIONS.md                    # Justifications des choix techniques
 ├── .gitignore                      # Exclusions Git
+├── requirements.txt                # Dépendances du projet
 │
-├── Adzuna API/                     # 🟢 Module principal (actif)
-│   ├── README.md                   # Documentation détaillée du module
-│   │
-│   ├── scraper/                    # Module de collecte
-│   │   ├── adzuna_scraper.py      # Script de scraping
-│   │   ├── config.json            # Clés API (non versionné)
-│   │   ├── requirements.txt       # Dépendances scraper
-│   │   └── readme.md              # Lien documentation API
-│   │
-│   ├── data/                       # Données collectées
-│   │   └── jobs_data.json         # 35k offres (36k+ lignes JSON)
-│   │
-│   └── analysis/                   # Module d'analyse
-│       ├── jobs_data.ipynb        # Notebook d'analyse principal
-│       └── requirements.txt       # Dépendances analyse
+├── src/                            # 🟢 Code source
+│   ├── __init__.py                # Package Python
+│   ├── config.json                # Clés API (non versionné)
+│   ├── config.example.adzuna.json # Template de configuration
+│   └── scraper_adzuna.py          # Script de scraping Adzuna
+│
+├── data/                           # 📊 Données collectées (ignoré par Git)
+│   ├── .gitkeep                   # Garde le dossier dans Git
+│   └── jobs_data.json             # 35k offres (généré localement)
+│
+├── notebooks/                      # 📓 Analyses Jupyter
+│   └── analysis.ipynb             # Notebook d'analyse principal
+│
+├── tests/                          # 🧪 Tests unitaires (à venir)
+│   └── .gitkeep
 │
 └── archive/                        # 📦 Anciennes implémentations
+    ├── Adzuna API/                # Ancienne structure (obsolète)
     └── France Travail API/        # Ancienne API (obsolète)
         └── README_ARCHIVE.md      # Raisons de l'archivage
 ```
@@ -103,18 +105,14 @@ source venv/bin/activate
 ### 3. Installer les dépendances
 
 ```bash
-# Pour le scraper uniquement
-pip install -r "Adzuna API/scraper/requirements.txt"
-
-# Pour l'analyse complète
-pip install -r "Adzuna API/analysis/requirements.txt"
+pip install -r requirements.txt
 ```
 
 ### 4. Configurer les clés API
 
 1. Créez un compte sur [Adzuna Developer](https://developer.adzuna.com/)
 2. Récupérez votre `app_id` et `app_key`
-3. Créez le fichier `Adzuna API/scraper/config.json` :
+3. Créez le fichier `src/config.json` :
 
 ```json
 {
@@ -125,7 +123,9 @@ pip install -r "Adzuna API/analysis/requirements.txt"
 }
 ```
 
-⚠️ **Note** : Le fichier `config.json` est ignoré par Git pour protéger vos clés API.
+💡 **Conseil :** Voir `src/config.example.adzuna.json` pour un exemple
+
+⚠️ **Note** : Le fichier `src/config.json` est ignoré par Git pour protéger vos clés API.
 
 ---
 
@@ -134,28 +134,32 @@ pip install -r "Adzuna API/analysis/requirements.txt"
 ### Collecte des données
 
 ```bash
-cd "Adzuna API/scraper"
-python adzuna_scraper.py
+# Depuis la racine du projet
+python -m src.scraper_adzuna
+
+# Ou directement
+python src/scraper_adzuna.py
 ```
 
-**Paramètres configurables** (dans le script) :
+**Paramètres configurables** (dans `src/scraper_adzuna.py`) :
 - `search_term` : Terme de recherche (défaut: `"data"`)
 - `max_pages` : Nombre max de pages (défaut: `700`, `None` = toutes)
 - `delay` : Délai entre requêtes en secondes (défaut: `0.2`)
 
 **Sortie** :
-- Fichier JSON dans `Adzuna API/data/jobs_data.json`
+- Fichier JSON dans `data/jobs_data.json`
 - Métadonnées : terme de recherche, date, nombre total
+- Le dossier `data/` est ignoré par Git
 
 ### Analyse des données
 
 ```bash
-cd "Adzuna API/analysis"
-jupyter notebook jobs_data.ipynb
+# Lancer Jupyter depuis la racine
+jupyter notebook notebooks/analysis.ipynb
 ```
 
 Le notebook permet de :
-- ✅ Charger et explorer les données JSON
+- ✅ Charger et explorer les données JSON depuis `../data/`
 - ✅ Transformer en DataFrame pandas
 - ✅ Nettoyer et enrichir les données
 - ✅ Créer des visualisations (salaires, localisation, contrats)
@@ -215,9 +219,10 @@ Voir `archive/France Travail API/README_ARCHIVE.md` pour plus de détails.
 
 ## 📚 Documentation complémentaire
 
-- [README Adzuna API](Adzuna%20API/README.md) - Documentation détaillée du module de collecte
 - [DECISIONS.md](DECISIONS.md) - Justifications des choix techniques
+- [src/config.example.adzuna.json](src/config.example.adzuna.json) - Template de configuration
 - [Documentation API Adzuna](https://developer.adzuna.com/activedocs) - API officielle
+- [Archive France Travail](archive/France%20Travail%20API/README_ARCHIVE.md) - Pourquoi archivé
 
 ---
 

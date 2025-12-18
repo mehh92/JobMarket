@@ -2,6 +2,14 @@
 config.json
 **/config.json
 
+# Data files (generated locally)
+data/
+*.json
+!config.example.adzuna.json
+!**/config.example.adzuna.json
+!package.json
+!tsconfig.json
+
 # Python
 __pycache__/
 *.py[cod]
