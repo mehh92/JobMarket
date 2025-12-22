@@ -23,6 +23,40 @@ python -m src.scraper_adzuna
 - Sauvegarde JSON avec métadonnées
 - Chemins relatifs dynamiques (utilise `pathlib`)
 
+### `db_config.py`
+Configuration centralisée pour la connexion PostgreSQL.
+
+**Fonctionnalités :**
+- Fonction `get_db_config()` : Retourne la config DB (dict)
+- Fonction `get_connection_string()` : Retourne l'URI PostgreSQL
+- Supporte les variables d'environnement (Docker) et config locale
+
+**Utilisation :**
+```python
+from db_config import get_db_config, get_connection_string
+
+config = get_db_config()  # {'host': 'localhost', 'port': 5432, ...}
+uri = get_connection_string()  # postgresql://user:pass@host:5432/db
+```
+
+### `db_loader.py`
+Module de chargement des données JSON dans PostgreSQL.
+
+**Utilisation :**
+```bash
+# Depuis la racine du projet (avec jobs_data.json déjà créé)
+python src/db_loader.py
+```
+
+**Fonctionnalités :**
+- Classe `JobMarketLoader` pour l'insertion en base
+- Lecture du fichier JSON
+- Insertion dans `raw.jobs_raw` (JSONB)
+- Insertion des métadonnées dans `raw.import_metadata`
+- Gestion des conflits (ON CONFLICT DO UPDATE)
+- Batch insertion (1000 lignes par batch)
+- Logging détaillé
+
 **Améliorations par rapport à l'ancienne version :**
 - ✅ Chemins relatifs au lieu de chemins codés en dur
 - ✅ Utilisation de `pathlib.Path` pour la portabilité
@@ -65,6 +99,8 @@ cp src/config.example.adzuna.json src/config.json
 
 Voir `requirements.txt` à la racine du projet :
 - `requests>=2.28.0` - Pour les appels API
+- `psycopg2-binary>=2.9.0` - Pour PostgreSQL
+- `apache-airflow>=2.10.0` - Pour l'orchestration (optionnel en local)
 
 ## Tests
 

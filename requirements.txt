@@ -3,6 +3,13 @@
 # HTTP requests
 requests>=2.28.0
 
+# PostgreSQL
+psycopg2-binary>=2.9.0
+
+# Airflow (pour développement local si besoin)
+apache-airflow>=2.10.0
+apache-airflow-providers-postgres>=5.11.0
+
 # Data manipulation and analysis
 numpy>=1.21.0,<2.0.0
 pandas>=1.5.0

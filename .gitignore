@@ -11,6 +11,16 @@ data/
 !package.json
 !tsconfig.json
 
+# Docker volumes
+postgres_data/
+airflow_data/
+
+# Airflow logs and temporary files
+logs/
+airflow-webserver.pid
+airflow-scheduler.pid
+standalone_admin_password.txt
+
 # Python
 __pycache__/
 *.py[cod]

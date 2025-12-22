@@ -33,16 +33,23 @@ Ce projet a été développé dans le cadre d'une **formation de Data Engineer**
 - **Requests** - Appels API HTTP
 - **Adzuna API** - Source de données d'emploi
 
+### Orchestration & ETL
+- **Apache Airflow 2.10** - Orchestrateur de workflows
+- **PostgreSQL 16** - Base de données relationnelle
+- **Docker & Docker Compose** - Containerisation
+- **psycopg2** - Connecteur PostgreSQL
+
 ### Analyse & Visualisation
 - **Pandas** - Manipulation et analyse des données
 - **NumPy** - Calculs numériques
 - **Matplotlib** - Visualisations statiques
 - **Seaborn** - Visualisations statistiques avancées
 - **Jupyter Notebook** - Environnement d'analyse interactif
+- **DBeaver** - Client SQL et visualisation
 
 ### Outils
 - **Git** - Gestion de versions
-- **JSON** - Format de stockage des données
+- **JSON** - Format de stockage temporaire
 
 ---
 
@@ -53,21 +60,44 @@ JobMarket/
 │
 ├── README.md                       # Ce fichier
 ├── DECISIONS.md                    # Justifications des choix techniques
+├── AIRFLOW_SETUP.md               # Guide de configuration Airflow
+├── DATABASE_SETUP.md              # Guide de configuration PostgreSQL
+├── DBEAVER_SETUP.md               # Guide de configuration DBeaver
 ├── .gitignore                      # Exclusions Git
 ├── requirements.txt                # Dépendances du projet
+├── docker-compose.yml             # Configuration Docker (Postgres + Airflow)
+│
+├── dags/                           # 🔄 DAGs Airflow
+│   └── jobmarket_etl_pipeline.py  # Pipeline ETL principal
 │
 ├── src/                            # 🟢 Code source
 │   ├── __init__.py                # Package Python
 │   ├── config.json                # Clés API (non versionné)
 │   ├── config.example.adzuna.json # Template de configuration
-│   └── scraper_adzuna.py          # Script de scraping Adzuna
+│   ├── scraper_adzuna.py          # Script de scraping Adzuna
+│   ├── db_config.py               # Configuration PostgreSQL centralisée
+│   └── db_loader.py               # Chargeur de données dans PostgreSQL
 │
-├── data/                           # 📊 Données collectées (ignoré par Git)
+├── sql/                            # 🗄️ Scripts SQL
+│   ├── init/                      # Scripts d'initialisation (auto-exec au 1er démarrage)
+│   │   ├── 01_create_schemas.sql  # Création des schémas (raw, staging, analytics)
+│   │   ├── 02_create_raw_tables.sql
+│   │   ├── 03_create_staging_tables.sql
+│   │   ├── 04_create_analytics_tables.sql
+│   │   └── 05_create_views.sql
+│   └── transformations/           # Scripts de transformation
+│       ├── 01_load_staging.sql    # RAW → STAGING
+│       ├── 02_load_analytics.sql  # STAGING → ANALYTICS
+│       └── 03_refresh_all.sql     # Refresh complet
+│
+├── data/                           # 📊 Données temporaires (ignoré par Git)
 │   ├── .gitkeep                   # Garde le dossier dans Git
-│   └── jobs_data.json             # 35k offres (généré localement)
+│   └── jobs_data.json             # JSON temporaire avant PostgreSQL
 │
-├── notebooks/                      # 📓 Analyses Jupyter
-│   └── analysis.ipynb             # Notebook d'analyse principal
+├── notebooks/                      # 📓 Analyses Jupyter (legacy)
+│   └── analysis.ipynb             # Notebook d'analyse initial
+│
+├── logs/                           # 📝 Logs Airflow (ignoré par Git)
 │
 ├── tests/                          # 🧪 Tests unitaires (à venir)
 │   └── .gitkeep
@@ -75,7 +105,6 @@ JobMarket/
 └── archive/                        # 📦 Anciennes implémentations
     ├── Adzuna API/                # Ancienne structure (obsolète)
     └── France Travail API/        # Ancienne API (obsolète)
-        └── README_ARCHIVE.md      # Raisons de l'archivage
 ```
 
 ---
@@ -131,39 +160,73 @@ pip install -r requirements.txt
 
 ## 💻 Utilisation
 
-### Collecte des données
+### Option A : Pipeline ETL Automatisé (Recommandé) 🚀
+
+Le projet utilise **Apache Airflow** pour orchestrer automatiquement le pipeline complet :
 
 ```bash
-# Depuis la racine du projet
-python -m src.scraper_adzuna
+# 1. Démarrer les services Docker (PostgreSQL + Airflow)
+docker-compose up -d
 
-# Ou directement
-python src/scraper_adzuna.py
+# 2. Accéder à l'interface Airflow
+# http://localhost:8080
+# Username: admin
+# Password: admin
+
+# 3. Activer et lancer le DAG "jobmarket_etl_pipeline"
+# (voir AIRFLOW_SETUP.md pour le guide complet)
 ```
 
-**Paramètres configurables** (dans `src/scraper_adzuna.py`) :
-- `search_term` : Terme de recherche (défaut: `"data"`)
-- `max_pages` : Nombre max de pages (défaut: `700`, `None` = toutes)
-- `delay` : Délai entre requêtes en secondes (défaut: `0.2`)
+**Le DAG exécute automatiquement :**
+1. 🔍 **Scraping** Adzuna (14 000+ offres)
+2. 📥 **Chargement** dans PostgreSQL (`raw.jobs_raw`)
+3. 🔄 **Transformation** vers staging (`staging.jobs_flattened`)
+4. 📊 **Enrichissement** vers analytics (`analytics.jobs_clean`)
+5. ✅ **Vérification** et statistiques
 
-**Sortie** :
-- Fichier JSON dans `data/jobs_data.json`
-- Métadonnées : terme de recherche, date, nombre total
-- Le dossier `data/` est ignoré par Git
+**Durée totale** : ~15 minutes (selon le nombre d'offres)
+
+👉 **Voir [AIRFLOW_SETUP.md](AIRFLOW_SETUP.md)** pour le guide complet.
+
+### Option B : Exécution manuelle (Legacy)
+
+```bash
+# 1. Scraping Adzuna
+python src/scraper_adzuna.py
+
+# 2. Chargement dans PostgreSQL
+python src/db_loader.py
+
+# 3. Transformation SQL (depuis DBeaver ou psql)
+psql -U jobmarket_user -d jobmarket -h localhost -f sql/transformations/03_refresh_all.sql
+```
 
 ### Analyse des données
 
-```bash
-# Lancer Jupyter depuis la racine
-jupyter notebook notebooks/analysis.ipynb
+#### 🔹 Avec DBeaver (Recommandé)
+
+1. Connectez-vous à PostgreSQL (voir [DBEAVER_SETUP.md](DBEAVER_SETUP.md))
+2. Exécutez les requêtes sur les vues analytics :
+
+```sql
+-- Salaires par type de poste
+SELECT * FROM analytics.vw_salaries_by_job;
+
+-- Top entreprises qui recrutent
+SELECT * FROM analytics.vw_top_companies LIMIT 20;
+
+-- Distribution géographique
+SELECT * FROM analytics.vw_geo_distribution;
+
+-- Tendances mensuelles
+SELECT * FROM analytics.vw_monthly_trends;
 ```
 
-Le notebook permet de :
-- ✅ Charger et explorer les données JSON depuis `../data/`
-- ✅ Transformer en DataFrame pandas
-- ✅ Nettoyer et enrichir les données
-- ✅ Créer des visualisations (salaires, localisation, contrats)
-- ✅ Extraire des insights métier
+#### 🔹 Avec Jupyter Notebook (Legacy)
+
+```bash
+jupyter notebook notebooks/analysis.ipynb
+```
 
 ---
 
@@ -219,7 +282,10 @@ Voir `archive/France Travail API/README_ARCHIVE.md` pour plus de détails.
 
 ## 📚 Documentation complémentaire
 
-- [DECISIONS.md](DECISIONS.md) - Justifications des choix techniques
+- **[AIRFLOW_SETUP.md](AIRFLOW_SETUP.md)** - 🚀 Guide complet Airflow (installation, DAG, troubleshooting)
+- **[DATABASE_SETUP.md](DATABASE_SETUP.md)** - 🗄️ Guide PostgreSQL avec Docker
+- **[DBEAVER_SETUP.md](DBEAVER_SETUP.md)** - 🔧 Configuration DBeaver pour connexion DB
+- **[DECISIONS.md](DECISIONS.md)** - 🧠 Justifications des choix techniques
 - [src/config.example.adzuna.json](src/config.example.adzuna.json) - Template de configuration
 - [Documentation API Adzuna](https://developer.adzuna.com/activedocs) - API officielle
 - [Archive France Travail](archive/France%20Travail%20API/README_ARCHIVE.md) - Pourquoi archivé
@@ -231,8 +297,11 @@ Voir `archive/France Travail API/README_ARCHIVE.md` pour plus de détails.
 Ce projet fait partie d'une formation en **Data Engineering** et démontre les compétences suivantes :
 
 - ✅ **Collecte de données** via API REST
-- ✅ **Gestion des données** (JSON, pandas)
-- ✅ **Nettoyage et transformation** (ETL)
+- ✅ **Orchestration ETL** avec Apache Airflow
+- ✅ **Base de données** PostgreSQL (schemas, tables, views)
+- ✅ **Containerisation** avec Docker & Docker Compose
+- ✅ **Transformations SQL** (Raw → Staging → Analytics)
+- ✅ **Gestion des données** (JSON, pandas, SQL)
 - ✅ **Analyse exploratoire** (EDA)
 - ✅ **Visualisation de données**
 - ✅ **Versioning et documentation** (Git, README)
@@ -242,11 +311,13 @@ Ce projet fait partie d'une formation en **Data Engineering** et démontre les c
 
 ## 📈 Améliorations futures
 
-- [ ] Automatiser la collecte quotidienne/hebdomadaire
-- [ ] Stocker les données dans une base PostgreSQL
-- [ ] Créer un dashboard interactif (Streamlit/Dash)
-- [ ] Ajouter des analyses de tendances temporelles
-- [ ] Intégrer d'autres sources de données d'emploi
+- [x] ~~Automatiser la collecte quotidienne/hebdomadaire~~ ✅ (Airflow)
+- [x] ~~Stocker les données dans une base PostgreSQL~~ ✅
+- [ ] Créer un dashboard interactif (Metabase, Superset, ou Streamlit)
+- [ ] Ajouter des tests de qualité de données (Great Expectations)
+- [ ] Intégrer d'autres sources de données d'emploi (Indeed, LinkedIn)
+- [ ] Ajouter un système d'alerting (emails Airflow)
+- [ ] Créer des vues pour Machine Learning (prédiction de salaires)
 
 ---
 
