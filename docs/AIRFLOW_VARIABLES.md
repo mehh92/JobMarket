@@ -157,7 +157,7 @@ Après avoir lancé le DAG, consultez les logs de la tâche `scrape_adzuna` :
 
 ### Limites de l'API Adzuna
 
-- **Gratuit** : 250 requêtes/mois
+- **Gratuit** : 250 requêtes/jour
 - **Premium** : Limites plus élevées
 
 Si vous approchez de la limite :
