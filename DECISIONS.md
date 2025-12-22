@@ -19,25 +19,20 @@ Dans le cadre de ce projet de recensement des offres d'emploi dans le domaine de
 ### 🔴 France Travail API - Points faibles
 
 #### 1. **Qualité des données insuffisante**
-- Informations limitées dans les offres d'emploi
+- Informations limitées dans les offres d'emploi (uniquement les emplois non cadre)
 - Descriptions souvent peu détaillées
-- Manque de données structurées exploitables
 
 #### 2. **Périmètre limité**
 - Uniquement les offres publiées sur France Travail
 - Couverture partielle du marché réel de l'emploi
-- Biais vers certains secteurs et types d'employeurs
+- Biais vers certains secteurs et types d'employeurs 
 
 #### 3. **Complexité de l'authentification**
 - Processus OAuth2 avec tokens
 - Nécessite une inscription et validation manuelle
 - Gestion des scopes et des credentials plus complexe
 
-#### 4. **API moins documentée**
-- Documentation technique moins accessible
-- Moins d'exemples et de ressources communautaires
-
-#### 5. **Structure des données**
+#### 4. **Structure des données**
 - Basée sur les codes ROME (classification française)
 - Moins flexible pour les recherches par mots-clés
 - Structure spécifique au contexte français
@@ -108,7 +103,7 @@ params = {
 | **Facilité d'implémentation** | ⭐⭐ | ⭐⭐⭐⭐⭐ |
 | **Couverture du marché** | ⭐⭐ | ⭐⭐⭐⭐ |
 | **Richesse des informations** | ⭐⭐ | ⭐⭐⭐⭐⭐ |
-| **Documentation** | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
+| **Documentation** | ⭐⭐⭐ | ⭐⭐⭐ |
 
 ---
 
@@ -126,7 +121,6 @@ params = {
 
 - ✅ Développement du scraper Adzuna (`adzuna_scraper.py`)
 - ✅ Collecte de 35 000 offres
-- ✅ Mise en place de l'analyse dans Jupyter Notebook
 - ✅ Archivage du code France Travail dans `archive/`
 
 ---

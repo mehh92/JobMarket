@@ -577,15 +577,15 @@ Taille DB:         ~15 MB (PostgreSQL)
 6. **Résilience** : Retry automatique, gestion erreurs
 7. **Performance** : Index SQL, batch insert
 
-### 📈 Évolutions futures possibles
+## 📈 Améliorations futures
 
-1. **Airflow distribué** : CeleryExecutor pour parallélisation
-2. **Cache Redis** : Améliorer performances Airflow
-3. **Data quality** : Great Expectations pour validation
-4. **CI/CD** : GitHub Actions pour tests automatiques
-5. **Monitoring** : Prometheus + Grafana
-6. **BI Tool** : Metabase ou Superset pour dashboards
-7. **ML Pipeline** : Prédiction salaires, classification
+- [x] ~~Automatiser la collecte quotidienne/hebdomadaire~~ ✅ (Airflow)
+- [x] ~~Stocker les données dans une base PostgreSQL~~ ✅
+- [ ] Créer un moteur de recherche interactif (Streamlit)
+- [ ] Ajouter des tests de qualité de données (Great Expectations)
+- [ ] Intégrer d'autres sources de données (technologies les plus recherchées : cloud, etl...) + extraire des descriptions les technos
+- [ ] Ajouter un système d'alerting (emails Airflow) selon les préférences d'un user
+- [ ] Créer des vues pour Machine Learning (prédiction de salaires)
 
 ---
 

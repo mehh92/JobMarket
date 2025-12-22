@@ -3,6 +3,9 @@
 > Projet de Data Engineering - Recensement et analyse des offres d'emploi dans le domaine de la DATA en France
 
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
+[![Airflow](https://img.shields.io/badge/Apache%20Airflow-2.10-red.svg)](https://airflow.apache.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue.svg)](https://www.postgresql.org/)
+[![Docker](https://img.shields.io/badge/Docker-Compose-2496ED.svg)](https://www.docker.com/)
 [![API](https://img.shields.io/badge/API-Adzuna-orange.svg)](https://developer.adzuna.com/)
 [![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-orange.svg)](https://jupyter.org/)
 [![Pandas](https://img.shields.io/badge/pandas-Data%20Analysis-green.svg)](https://pandas.pydata.org/)
@@ -11,7 +14,7 @@
 
 ## 📋 À propos du projet
 
-Ce projet a été développé dans le cadre d'une **formation de Data Engineer**. Il a pour objectif de :
+Ce projet a été développé dans le cadre d'une **formation de Data Engineer** au sein de l'organisme Data Scientist. Il a pour objectif de :
 
 - 🔍 **Collecter** automatiquement les offres d'emploi liées aux métiers de la DATA
 - 📊 **Analyser** les tendances du marché de l'emploi (salaires, compétences, localisation)
@@ -115,118 +118,49 @@ JobMarket/
 
 ## 🔧 Installation
 
-### 1. Cloner le repository
+### Démarrage rapide
 
 ```bash
+# 1. Cloner le projet
 git clone https://github.com/votre-username/JobMarket.git
 cd JobMarket
-```
 
-### 2. Créer un environnement virtuel
+# 2. Configurer les clés API Adzuna
+cp src/config.example.adzuna.json src/config.json
+# Éditer src/config.json avec vos clés (https://developer.adzuna.com/)
 
-```bash
-# Créer l'environnement
-python -m venv venv
-
-# Activer l'environnement
-# Sur Windows :
-venv\Scripts\activate
-# Sur Linux/Mac :
-source venv/bin/activate
-```
-
-### 3. Installer les dépendances
-
-```bash
-pip install -r requirements.txt
-```
-
-### 4. Configurer les clés API
-
-1. Créez un compte sur [Adzuna Developer](https://developer.adzuna.com/)
-2. Récupérez votre `app_id` et `app_key`
-3. Créez le fichier `src/config.json` :
-
-```json
-{
-  "adzuna": {
-    "app_id": "votre_app_id",
-    "app_key": "votre_app_key"
-  }
-}
-```
-
-💡 **Conseil :** Voir `src/config.example.adzuna.json` pour un exemple
-
-⚠️ **Note** : Le fichier `src/config.json` est ignoré par Git pour protéger vos clés API.
-
----
-
-## 💻 Utilisation
-
-### Option A : Pipeline ETL Automatisé (Recommandé) 🚀
-
-Le projet utilise **Apache Airflow** pour orchestrer automatiquement le pipeline complet :
-
-```bash
-# 1. Démarrer les services Docker (PostgreSQL + Airflow)
+# 3. Démarrer l'infrastructure Docker
 docker-compose up -d
 
-# 2. Accéder à l'interface Airflow
-# http://localhost:8080
-# Username: admin
-# Password: admin
-
-# 3. Activer et lancer le DAG "jobmarket_etl_pipeline"
-# (voir docs/AIRFLOW_SETUP.md pour le guide complet)
+# 4. Accéder à Airflow
+# http://localhost:8080 (admin/admin)
 ```
 
-**Le DAG exécute automatiquement :**
-1. 🔍 **Scraping** Adzuna (14 000+ offres)
-2. 📥 **Chargement** dans PostgreSQL (`raw.jobs_raw`)
-3. 🔄 **Transformation** vers staging (`staging.jobs_flattened`)
-4. 📊 **Enrichissement** vers analytics (`analytics.jobs_clean`)
-5. ✅ **Vérification** et statistiques
+### 📖 Guide d'installation complet
 
-**Durée totale** : ~15 minutes (selon le nombre d'offres)
+Pour une installation détaillée étape par étape avec toutes les explications, consultez :
 
-👉 **Voir [docs/AIRFLOW_SETUP.md](docs/AIRFLOW_SETUP.md)** pour le guide complet.
+👉 **[ARCHITECTURE.md - Flux d'exécution](ARCHITECTURE.md#-flux-dexécution---chronologie)**
 
-### Option B : Exécution manuelle (Legacy)
+Ce guide couvre :
+- ✅ Installation initiale complète (venv, dépendances)
+- ✅ Configuration détaillée de Docker
+- ✅ Initialisation PostgreSQL et Airflow
+- ✅ Configuration de la connexion à la base de données
+- ✅ Premier lancement du pipeline
+- ✅ Passage en production
+- ✅ Monitoring et maintenance
 
-```bash
-# 1. Scraping Adzuna
-python src/scraper_adzuna.py
-
-# 2. Chargement dans PostgreSQL
-python src/db_loader.py
-
-# 3. Transformation SQL (depuis DBeaver ou psql)
-psql -U jobmarket_user -d jobmarket -h localhost -f sql/transformations/03_refresh_all.sql
-```
+---
 
 ### Analyse des données
 
 #### 🔹 Avec DBeaver (Recommandé)
 
 1. Connectez-vous à PostgreSQL (voir [docs/DBEAVER_SETUP.md](docs/DBEAVER_SETUP.md))
-2. Exécutez les requêtes sur les vues analytics :
 
-```sql
--- Salaires par type de poste
-SELECT * FROM analytics.vw_salaries_by_job;
 
--- Top entreprises qui recrutent
-SELECT * FROM analytics.vw_top_companies LIMIT 20;
-
--- Distribution géographique
-SELECT * FROM analytics.vw_geo_distribution;
-
--- Tendances mensuelles
-SELECT * FROM analytics.vw_monthly_trends;
-```
-
-#### 🔹 Avec Jupyter Notebook (Legacy)
+#### 🔹 Avec Jupyter Notebook (Legacy)(Plus utilisé depuis le passage à SQL)
 
 ```bash
 jupyter notebook notebooks/analysis.ipynb
