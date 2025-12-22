@@ -327,10 +327,10 @@ Ce projet fait partie d'une formation en **Data Engineering** et démontre les c
 
 - [x] ~~Automatiser la collecte quotidienne/hebdomadaire~~ ✅ (Airflow)
 - [x] ~~Stocker les données dans une base PostgreSQL~~ ✅
-- [ ] Créer un dashboard interactif (Metabase, Superset, ou Streamlit)
+- [ ] Créer un moteur de recherche interactif (Streamlit)
 - [ ] Ajouter des tests de qualité de données (Great Expectations)
-- [ ] Intégrer d'autres sources de données d'emploi (Indeed, LinkedIn)
-- [ ] Ajouter un système d'alerting (emails Airflow)
+- [ ] Intégrer d'autres sources de données (technologies les plus recherchées : cloud, etl...) + extraire des descriptions les technos
+- [ ] Ajouter un système d'alerting (emails Airflow) selon les préférences d'un user
 - [ ] Créer des vues pour Machine Learning (prédiction de salaires)
 
 ---
