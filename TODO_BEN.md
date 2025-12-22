@@ -10,6 +10,7 @@
   - Supprimer les doublons dans le scraper
   - Filtrer les offres non pertinentes
   - Harmoniser les formats (salaires, dates)
+  - Améliorer les title_normalized
 
 - [ ] **Extraction des technos depuis descriptions**
   - Regex/NLP pour extraire : Python, SQL, Docker, AWS, etc.

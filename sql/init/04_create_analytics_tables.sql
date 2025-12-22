@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS analytics.jobs_clean (
     
     -- Informations principales
     title TEXT,
+    title_normalized VARCHAR(100),  -- Titre normalisé (ex: "Data Engineer")
     description TEXT,
     created TIMESTAMP,
     
@@ -20,9 +21,6 @@ CREATE TABLE IF NOT EXISTS analytics.jobs_clean (
     salary_min NUMERIC(10, 2),
     salary_max NUMERIC(10, 2),
     salary_avg NUMERIC(10, 2),
-    salary_min_k NUMERIC(10, 2),
-    salary_max_k NUMERIC(10, 2),
-    salary_avg_k NUMERIC(10, 2),
     
     -- Localisation
     latitude NUMERIC(10, 6),
@@ -33,20 +31,10 @@ CREATE TABLE IF NOT EXISTS analytics.jobs_clean (
     department VARCHAR(100),
     city VARCHAR(100),
     
-    -- Flags géographiques
-    is_paris BOOLEAN,
-    is_ile_de_france BOOLEAN,
-    
     -- Entreprise et catégorie
     company_name VARCHAR(255),
     category_label VARCHAR(255),
     category_tag VARCHAR(100),
-    
-    -- Flags métiers
-    is_data_scientist BOOLEAN,
-    is_data_analyst BOOLEAN,
-    is_data_engineer BOOLEAN,
-    is_alternance BOOLEAN,
     
     -- Dimensions temporelles
     year INTEGER,
@@ -65,11 +53,8 @@ CREATE TABLE IF NOT EXISTS analytics.jobs_clean (
 -- Index pour analyses
 CREATE INDEX IF NOT EXISTS idx_analytics_company ON analytics.jobs_clean(company_name);
 CREATE INDEX IF NOT EXISTS idx_analytics_year_month ON analytics.jobs_clean(year, month);
-CREATE INDEX IF NOT EXISTS idx_analytics_salary ON analytics.jobs_clean(salary_avg_k) WHERE salary_avg_k IS NOT NULL;
-CREATE INDEX IF NOT EXISTS idx_analytics_paris ON analytics.jobs_clean(is_paris);
-CREATE INDEX IF NOT EXISTS idx_analytics_ds ON analytics.jobs_clean(is_data_scientist);
-CREATE INDEX IF NOT EXISTS idx_analytics_da ON analytics.jobs_clean(is_data_analyst);
-CREATE INDEX IF NOT EXISTS idx_analytics_de ON analytics.jobs_clean(is_data_engineer);
+CREATE INDEX IF NOT EXISTS idx_analytics_salary ON analytics.jobs_clean(salary_avg) WHERE salary_avg IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_analytics_title_normalized ON analytics.jobs_clean(title_normalized);
 
 -- Commentaires
 COMMENT ON TABLE analytics.jobs_clean IS 'Table finale enrichie pour analyses BI';
