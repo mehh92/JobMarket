@@ -266,13 +266,15 @@ JobMarket/
 │   ├── README.md                    # Vue d'ensemble
 │   ├── ARCHITECTURE.md              # Ce fichier (architecture)
 │   ├── DECISIONS.md                 # Choix techniques
-│   ├── AIRFLOW_SETUP.md            # Guide Airflow
-│   ├── AIRFLOW_VARIABLES.md        # Config modes TEST/PROD
-│   ├── DATABASE_SETUP.md           # Guide PostgreSQL
-│   ├── DBEAVER_SETUP.md            # Guide DBeaver
 │   ├── .gitignore                  # Exclusions Git
 │   ├── requirements.txt            # Dépendances Python
 │   └── docker-compose.yml          # Infrastructure Docker
+│
+├── 📚 docs/                        # Documentation détaillée
+│   ├── AIRFLOW_SETUP.md            # Guide Airflow
+│   ├── AIRFLOW_VARIABLES.md        # Config modes TEST/PROD
+│   ├── DATABASE_SETUP.md           # Guide PostgreSQL
+│   └── DBEAVER_SETUP.md            # Guide DBeaver
 │
 ├── 🔄 dags/                        # DAGs Airflow
 │   └── jobmarket_etl_pipeline.py   # Pipeline ETL principal
@@ -589,12 +591,15 @@ Taille DB:         ~15 MB (PostgreSQL)
 
 ## 📚 Liens vers la documentation
 
+### Documentation principale
 - [README.md](README.md) - Vue d'ensemble du projet
-- [AIRFLOW_SETUP.md](AIRFLOW_SETUP.md) - Configuration Airflow
-- [AIRFLOW_VARIABLES.md](AIRFLOW_VARIABLES.md) - Modes TEST/PRODUCTION
-- [DATABASE_SETUP.md](DATABASE_SETUP.md) - Configuration PostgreSQL
-- [DBEAVER_SETUP.md](DBEAVER_SETUP.md) - Configuration DBeaver
 - [DECISIONS.md](DECISIONS.md) - Décisions techniques
+
+### Guides détaillés (docs/)
+- [docs/AIRFLOW_SETUP.md](docs/AIRFLOW_SETUP.md) - Configuration Airflow
+- [docs/AIRFLOW_VARIABLES.md](docs/AIRFLOW_VARIABLES.md) - Modes TEST/PRODUCTION
+- [docs/DATABASE_SETUP.md](docs/DATABASE_SETUP.md) - Configuration PostgreSQL
+- [docs/DBEAVER_SETUP.md](docs/DBEAVER_SETUP.md) - Configuration DBeaver
 
 ---
 

@@ -59,13 +59,17 @@ Ce projet a été développé dans le cadre d'une **formation de Data Engineer**
 JobMarket/
 │
 ├── README.md                       # Ce fichier
+├── ARCHITECTURE.md                 # Architecture du projet
 ├── DECISIONS.md                    # Justifications des choix techniques
-├── AIRFLOW_SETUP.md               # Guide de configuration Airflow
-├── DATABASE_SETUP.md              # Guide de configuration PostgreSQL
-├── DBEAVER_SETUP.md               # Guide de configuration DBeaver
 ├── .gitignore                      # Exclusions Git
 ├── requirements.txt                # Dépendances du projet
 ├── docker-compose.yml             # Configuration Docker (Postgres + Airflow)
+│
+├── docs/                           # 📚 Documentation détaillée
+│   ├── AIRFLOW_SETUP.md           # Guide Airflow
+│   ├── AIRFLOW_VARIABLES.md       # Config TEST/PROD
+│   ├── DATABASE_SETUP.md          # Guide PostgreSQL
+│   └── DBEAVER_SETUP.md           # Guide DBeaver
 │
 ├── dags/                           # 🔄 DAGs Airflow
 │   └── jobmarket_etl_pipeline.py  # Pipeline ETL principal
@@ -174,7 +178,7 @@ docker-compose up -d
 # Password: admin
 
 # 3. Activer et lancer le DAG "jobmarket_etl_pipeline"
-# (voir AIRFLOW_SETUP.md pour le guide complet)
+# (voir docs/AIRFLOW_SETUP.md pour le guide complet)
 ```
 
 **Le DAG exécute automatiquement :**
@@ -186,7 +190,7 @@ docker-compose up -d
 
 **Durée totale** : ~15 minutes (selon le nombre d'offres)
 
-👉 **Voir [AIRFLOW_SETUP.md](AIRFLOW_SETUP.md)** pour le guide complet.
+👉 **Voir [docs/AIRFLOW_SETUP.md](docs/AIRFLOW_SETUP.md)** pour le guide complet.
 
 ### Option B : Exécution manuelle (Legacy)
 
@@ -205,7 +209,7 @@ psql -U jobmarket_user -d jobmarket -h localhost -f sql/transformations/03_refre
 
 #### 🔹 Avec DBeaver (Recommandé)
 
-1. Connectez-vous à PostgreSQL (voir [DBEAVER_SETUP.md](DBEAVER_SETUP.md))
+1. Connectez-vous à PostgreSQL (voir [docs/DBEAVER_SETUP.md](docs/DBEAVER_SETUP.md))
 2. Exécutez les requêtes sur les vues analytics :
 
 ```sql
@@ -280,14 +284,22 @@ Voir `archive/France Travail API/README_ARCHIVE.md` pour plus de détails.
 
 ---
 
-## 📚 Documentation complémentaire
+## 📚 Documentation
 
-- **[ARCHITECTURE.md](ARCHITECTURE.md)** - 🏗️ **Architecture complète avec schémas visuels**
-- **[AIRFLOW_SETUP.md](AIRFLOW_SETUP.md)** - 🚀 Guide complet Airflow (installation, DAG, troubleshooting)
-- **[AIRFLOW_VARIABLES.md](AIRFLOW_VARIABLES.md)** - 🎛️ Configuration mode TEST/PRODUCTION pour le scraping
-- **[DATABASE_SETUP.md](DATABASE_SETUP.md)** - 🗄️ Guide PostgreSQL avec Docker
-- **[DBEAVER_SETUP.md](DBEAVER_SETUP.md)** - 🔧 Configuration DBeaver pour connexion DB
+### 📋 Documentation principale
+
+- **[ARCHITECTURE.md](ARCHITECTURE.md)** - 🏗️ Architecture complète avec schémas visuels
 - **[DECISIONS.md](DECISIONS.md)** - 🧠 Justifications des choix techniques
+
+### 📖 Guides détaillés
+
+- **[docs/AIRFLOW_SETUP.md](docs/AIRFLOW_SETUP.md)** - 🚀 Guide complet Airflow (installation, DAG, troubleshooting)
+- **[docs/AIRFLOW_VARIABLES.md](docs/AIRFLOW_VARIABLES.md)** - 🎛️ Configuration mode TEST/PRODUCTION pour le scraping
+- **[docs/DATABASE_SETUP.md](docs/DATABASE_SETUP.md)** - 🗄️ Guide PostgreSQL avec Docker
+- **[docs/DBEAVER_SETUP.md](docs/DBEAVER_SETUP.md)** - 🔧 Configuration DBeaver pour connexion DB
+
+### 🔗 Ressources externes
+
 - [src/config.example.adzuna.json](src/config.example.adzuna.json) - Template de configuration
 - [Documentation API Adzuna](https://developer.adzuna.com/activedocs) - API officielle
 - [Archive France Travail](archive/France%20Travail%20API/README_ARCHIVE.md) - Pourquoi archivé
