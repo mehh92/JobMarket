@@ -283,6 +283,7 @@ Voir `archive/France Travail API/README_ARCHIVE.md` pour plus de détails.
 ## 📚 Documentation complémentaire
 
 - **[AIRFLOW_SETUP.md](AIRFLOW_SETUP.md)** - 🚀 Guide complet Airflow (installation, DAG, troubleshooting)
+- **[AIRFLOW_VARIABLES.md](AIRFLOW_VARIABLES.md)** - 🎛️ Configuration mode TEST/PRODUCTION pour le scraping
 - **[DATABASE_SETUP.md](DATABASE_SETUP.md)** - 🗄️ Guide PostgreSQL avec Docker
 - **[DBEAVER_SETUP.md](DBEAVER_SETUP.md)** - 🔧 Configuration DBeaver pour connexion DB
 - **[DECISIONS.md](DECISIONS.md)** - 🧠 Justifications des choix techniques

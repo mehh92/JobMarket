@@ -68,7 +68,7 @@ Assurez-vous que `src/config.json` existe et contient vos clés API :
 
 ```bash
 # Depuis le répertoire racine du projet
-cd C:\Users\dubas\Documents\JobMarket
+cd C:\Users\xxx\Documents\JobMarket
 
 # Démarrer PostgreSQL + Airflow
 docker-compose up -d
@@ -130,7 +130,7 @@ Pour que le DAG puisse exécuter les transformations SQL, il faut créer une con
 | **Connection Id** | `jobmarket_postgres`      |
 | **Connection Type** | `Postgres`              |
 | **Host**          | `postgres`                |
-| **Schema**        | `jobmarket`               |
+| **Database**        | `jobmarket`               |
 | **Login**         | `jobmarket_user`          |
 | **Password**      | `jobmarket_pass`          |
 | **Port**          | `5432`                    |
@@ -152,6 +152,46 @@ airflow connections add 'jobmarket_postgres' \
 
 exit
 ```
+
+---
+
+## 🎛️ Configuration des Variables (Mode TEST/PRODUCTION)
+
+Le DAG supporte deux modes de fonctionnement :
+
+| Mode | Pages | Offres | Durée | Usage |
+|------|-------|--------|-------|-------|
+| **TEST** | 5 | ~100 | 1-2 min | Tests, développement ✅ |
+| **PRODUCTION** | 700 | ~14 000 | 25-30 min | Collecte complète |
+
+**Par défaut**, le DAG démarre en **mode TEST** (5 pages) pour éviter les longs scraping pendant les tests.
+
+### Passer en mode PRODUCTION
+
+1. Allez dans **Admin → Variables**
+2. Cliquez sur **"+"**
+3. Créez la variable :
+   - **Key** : `scraping_mode`
+   - **Val** : `production`
+4. **Save**
+
+C'est tout ! Le prochain run scrapers 700 pages.
+
+### Revenir en mode TEST
+
+1. Allez dans **Admin → Variables**
+2. Modifiez `scraping_mode` → `test`
+3. Ou supprimez la variable complètement
+
+### Configuration avancée
+
+Vous pouvez également configurer :
+- `search_term` : Terme de recherche (défaut: "data")
+- `test_max_pages` : Nombre de pages en mode TEST (défaut: 5)
+- `max_pages` : Nombre de pages en mode PRODUCTION (défaut: 700)
+- `delay` : Délai entre requêtes en secondes (défaut: 0.2)
+
+👉 **Guide complet** : [AIRFLOW_VARIABLES.md](AIRFLOW_VARIABLES.md)
 
 ---
 
@@ -302,93 +342,6 @@ SELECT * FROM analytics.vw_geo_distribution LIMIT 10;
 
 ---
 
-## 🛠️ Dépannage
-
-### Problème : Airflow ne démarre pas
-
-**Symptôme :**
-```bash
-docker-compose ps
-# jobmarket_airflow est "Restarting"
-```
-
-**Solution :**
-```bash
-# Voir les logs
-docker-compose logs airflow
-
-# Souvent, c'est un problème de mémoire. Augmentez la RAM de Docker (4GB minimum)
-# Settings → Resources → Memory → 4GB
-
-# Redémarrer
-docker-compose restart airflow
-```
-
-### Problème : DAG n'apparaît pas dans l'interface
-
-**Solutions :**
-1. Vérifier que le fichier est bien dans `dags/`
-2. Vérifier la syntaxe Python :
-   ```bash
-   docker exec -it jobmarket_airflow bash
-   python /opt/airflow/dags/jobmarket_etl_pipeline.py
-   exit
-   ```
-3. Forcer le refresh :
-   ```bash
-   docker-compose restart airflow
-   ```
-
-### Problème : Erreur `Connection 'jobmarket_postgres' not found`
-
-**Solution :**
-La connexion PostgreSQL n'est pas configurée. Suivez la section [Configuration de la connexion PostgreSQL](#configuration-de-la-connexion-postgresql).
-
-### Problème : Erreur `No module named 'scraper_adzuna'`
-
-**Solution :**
-Le dossier `src/` n'est pas monté correctement. Vérifiez `docker-compose.yml` :
-```yaml
-volumes:
-  - ./src:/opt/airflow/src
-```
-
-Redémarrez :
-```bash
-docker-compose down
-docker-compose up -d
-```
-
-### Problème : Scraping échoue (clés API invalides)
-
-**Solution :**
-Vérifiez que `src/config.json` contient les bonnes clés :
-```bash
-cat src/config.json
-```
-
-Si vide ou incorrect, mettez à jour et redémarrez :
-```bash
-docker-compose restart airflow
-```
-
-### Problème : Impossible de se connecter à PostgreSQL depuis Airflow
-
-**Solution :**
-Vérifiez que PostgreSQL est bien démarré :
-```bash
-docker ps
-# jobmarket_postgres doit être "Up (healthy)"
-
-# Tester la connexion depuis le conteneur Airflow
-docker exec -it jobmarket_airflow bash
-psql -h postgres -U jobmarket_user -d jobmarket -c "SELECT 1;"
-# Mot de passe : jobmarket_pass
-exit
-```
-
----
-
 ## 📊 Prochaines étapes
 
 1. ✅ **Pipeline fonctionnel** : Vous avez un ETL automatisé de bout en bout
@@ -407,8 +360,4 @@ exit
 - [Guide PostgreSQL](./DATABASE_SETUP.md)
 
 ---
-
-**Félicitations ! Votre pipeline ETL avec Airflow est opérationnel !** 🎉
-
-Pour toute question, consultez les logs ou ouvrez une issue sur le repository.
 

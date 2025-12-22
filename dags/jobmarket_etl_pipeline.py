@@ -21,6 +21,7 @@ from airflow.operators.python import PythonOperator
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 from airflow.operators.dummy import DummyOperator
+from airflow.models import Variable
 
 # Ajouter le dossier src au path pour imports
 sys.path.insert(0, '/opt/airflow/src')
@@ -60,10 +61,29 @@ def scrape_adzuna_jobs(**context):
     if not app_id or not app_key:
         raise ValueError("❌ Clés API Adzuna manquantes dans config.json")
     
-    # Paramètres de scraping
-    search_term = "data"
-    max_pages = 700  # ou None pour tout
-    delay = 0.2
+    # Paramètres de scraping (récupérés depuis les Variables Airflow)
+    # Par défaut: mode TEST avec seulement 5 pages (~1-2 minutes)
+    # Pour passer en PRODUCTION: définir la variable "scraping_mode" = "production" dans Airflow
+    scraping_mode = Variable.get("scraping_mode", default_var="test")
+    
+    if scraping_mode == "production":
+        # Mode PRODUCTION: scraping complet
+        search_term = Variable.get("search_term", default_var="data")
+        max_pages = int(Variable.get("max_pages", default_var="700"))
+        delay = float(Variable.get("delay", default_var="0.2"))
+        print("🚀 MODE PRODUCTION activé")
+    else:
+        # Mode TEST: scraping limité pour les tests
+        search_term = Variable.get("search_term", default_var="data")
+        max_pages = int(Variable.get("test_max_pages", default_var="5"))  # Seulement 5 pages (~100 offres)
+        delay = float(Variable.get("delay", default_var="0.2"))
+        print("🧪 MODE TEST activé (scraping limité)")
+    
+    print(f"📊 Configuration du scraping:")
+    print(f"   • Mode: {scraping_mode.upper()}")
+    print(f"   • Terme de recherche: '{search_term}'")
+    print(f"   • Nombre de pages: {max_pages}")
+    print(f"   • Délai entre requêtes: {delay}s")
     
     # Créer le scraper et récupérer les données
     print(f"🔄 Scraping en cours (terme: '{search_term}', max_pages: {max_pages})...")
