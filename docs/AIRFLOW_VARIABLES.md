@@ -182,8 +182,8 @@ delay = 0.2
 ## 🔗 Voir aussi
 
 - [AIRFLOW_SETUP.md](AIRFLOW_SETUP.md) - Configuration générale d'Airflow
-- [README.md](README.md) - Vue d'ensemble du projet
-- [dags/jobmarket_etl_pipeline.py](dags/jobmarket_etl_pipeline.py) - Code du DAG
+- [README.md](../README.md) - Vue d'ensemble du projet
+- [dags/jobmarket_etl_pipeline.py](../dags/jobmarket_etl_pipeline.py) - Code du DAG
 
 ---
 
