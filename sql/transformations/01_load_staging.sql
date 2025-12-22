@@ -96,12 +96,4 @@ DO UPDATE SET
     redirect_url = EXCLUDED.redirect_url,
     processed_at = CURRENT_TIMESTAMP;
 
--- Afficher les statistiques
-DO $$
-DECLARE
-    row_count INTEGER;
-BEGIN
-    SELECT COUNT(*) INTO row_count FROM staging.jobs_flattened;
-    RAISE NOTICE '✅ Staging chargé : % lignes', row_count;
-END $$;
 

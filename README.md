@@ -282,6 +282,7 @@ Voir `archive/France Travail API/README_ARCHIVE.md` pour plus de détails.
 
 ## 📚 Documentation complémentaire
 
+- **[ARCHITECTURE.md](ARCHITECTURE.md)** - 🏗️ **Architecture complète avec schémas visuels**
 - **[AIRFLOW_SETUP.md](AIRFLOW_SETUP.md)** - 🚀 Guide complet Airflow (installation, DAG, troubleshooting)
 - **[AIRFLOW_VARIABLES.md](AIRFLOW_VARIABLES.md)** - 🎛️ Configuration mode TEST/PRODUCTION pour le scraping
 - **[DATABASE_SETUP.md](DATABASE_SETUP.md)** - 🗄️ Guide PostgreSQL avec Docker
