@@ -32,12 +32,3 @@ SELECT
     COUNT(*)
 FROM analytics.jobs_clean;
 
--- Statistiques des vues
-\echo ''
-\echo '📈 Vues analytics disponibles :'
-\echo '   • vw_salaries_by_job'
-\echo '   • vw_top_companies'
-\echo '   • vw_geo_distribution'
-\echo '   • vw_monthly_trends'
-\echo '   • vw_top_cities'
-

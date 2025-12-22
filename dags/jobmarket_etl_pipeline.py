@@ -214,6 +214,7 @@ with DAG(
     schedule_interval=None,  # Manuel pour l'instant (mettre '@daily' pour quotidien)
     catchup=False,
     tags=['etl', 'jobmarket', 'adzuna', 'postgresql'],
+    template_searchpath='/opt/airflow/sql',  # Chemin vers les fichiers SQL
 ) as dag:
     
     # Tâche de démarrage (optionnelle, pour visualisation)

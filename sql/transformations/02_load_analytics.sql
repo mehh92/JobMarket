@@ -124,25 +124,3 @@ DO UPDATE SET
     month = EXCLUDED.month,
     year_month = EXCLUDED.year_month;
 
--- Afficher les statistiques
-DO $$
-DECLARE
-    row_count INTEGER;
-    with_salary INTEGER;
-    ds_count INTEGER;
-    da_count INTEGER;
-    de_count INTEGER;
-BEGIN
-    SELECT COUNT(*) INTO row_count FROM analytics.jobs_clean;
-    SELECT COUNT(*) INTO with_salary FROM analytics.jobs_clean WHERE salary_avg_k IS NOT NULL;
-    SELECT COUNT(*) INTO ds_count FROM analytics.jobs_clean WHERE is_data_scientist = true;
-    SELECT COUNT(*) INTO da_count FROM analytics.jobs_clean WHERE is_data_analyst = true;
-    SELECT COUNT(*) INTO de_count FROM analytics.jobs_clean WHERE is_data_engineer = true;
-    
-    RAISE NOTICE '✅ Analytics chargé : % lignes', row_count;
-    RAISE NOTICE '   💰 Avec salaire : %', with_salary;
-    RAISE NOTICE '   🔬 Data Scientists : %', ds_count;
-    RAISE NOTICE '   📊 Data Analysts : %', da_count;
-    RAISE NOTICE '   ⚙️  Data Engineers : %', de_count;
-END $$;
-

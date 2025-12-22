@@ -79,67 +79,6 @@ Val: 0.2           (par défaut, en secondes)
 - ~100 offres
 - Durée : 1-2 minutes
 
-### Exemple 2 : Passer en mode PRODUCTION
-
-**Variables à créer :**
-
-```
-scraping_mode = production
-```
-
-C'est tout ! Le DAG utilisera automatiquement 700 pages.
-
-**Résultat :**
-- 700 pages scrapées
-- ~14 000 offres
-- Durée : 25-30 minutes
-
-### Exemple 3 : Test intermédiaire (50 pages)
-
-**Variables à créer :**
-
-```
-scraping_mode = test
-test_max_pages = 50
-```
-
-**Résultat :**
-- 50 pages scrapées
-- ~1 000 offres
-- Durée : 5-7 minutes
-
-### Exemple 4 : Production réduite (200 pages)
-
-**Variables à créer :**
-
-```
-scraping_mode = production
-max_pages = 200
-```
-
-**Résultat :**
-- 200 pages scrapées
-- ~4 000 offres
-- Durée : 8-10 minutes
-
-### Exemple 5 : Recherche différente
-
-**Variables à créer :**
-
-```
-scraping_mode = test
-search_term = data engineer
-test_max_pages = 10
-```
-
-**Résultat :**
-- Recherche spécifique "data engineer"
-- 10 pages scrapées
-- ~200 offres
-- Durée : 2-3 minutes
-
----
-
 ## 🎯 Guide de démarrage rapide
 
 ### Pour vos premiers tests (recommandé)
@@ -181,35 +120,6 @@ Après avoir lancé le DAG, consultez les logs de la tâche `scrape_adzuna` :
 🔄 Scraping en cours (terme: 'data', max_pages: 5)...
 ```
 
----
-
-## 🛠️ Méthode 2 : Via CLI (avancé)
-
-### Créer une variable
-
-```bash
-docker exec jobmarket_airflow airflow variables set scraping_mode production
-```
-
-### Lister toutes les variables
-
-```bash
-docker exec jobmarket_airflow airflow variables list
-```
-
-### Obtenir une variable
-
-```bash
-docker exec jobmarket_airflow airflow variables get scraping_mode
-```
-
-### Supprimer une variable
-
-```bash
-docker exec jobmarket_airflow airflow variables delete scraping_mode
-```
-
----
 
 ## 🎬 Workflow recommandé
 
