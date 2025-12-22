@@ -8,6 +8,7 @@
   
 - [ ] **Nettoyer les données**
   - Supprimer les doublons dans le scraper
+  - Vérifier l'API y'a des doublons chelou
   - Filtrer les offres non pertinentes
   - Harmoniser les formats (salaires, dates)
   - Améliorer les title_normalized
